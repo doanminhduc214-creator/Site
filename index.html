@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FB Damage Tool</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #00ff41;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        textarea, input {
+            width: 100%;
+            background: #1a1a1a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        button {
+            background: #00ff41;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ff0000;
+            color: #fff;
+        }
+        .log {
+            height: 300px;
+            overflow-y: scroll;
+            background: #000;
+            border: 1px solid #00ff41;
+            padding: 10px;
+            font-size: 12px;
+        }
+        .warning {
+            color: #ffaa00;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🔥 FB DAMAGE TOOL - HTTP FLOOD SIMULATOR 🔥</h2>
+    <div class="warning">⚠️ CẢNH BÁO: TOOL NÀY CHỈ MÔ PHỎNG. HÀNH VI TẤN CÔNG THỰC TẾ LÀ BẤT HỢP PHÁP ⚠️</div>
+
+    <label>🎯 URL TARGET (Facebook):</label>
+    <input type="text" id="targetUrl" placeholder="https://www.facebook.com/xxxxx" value="https://www.facebook.com/">
+
+    <label>⚙️ SỐ REQUEST MÔ PHỎNG:</label>
+    <input type="number" id="requestCount" value="100">
+
+    <label>⏱️ DELAY (ms) GIỮA CÁC REQUEST:</label>
+    <input type="number" id="delayMs" value="10">
+
+    <button id="startBtn">🚀 BẮT ĐẦU DAMAGE (MÔ PHỎNG)</button>
+    <button id="clearBtn">🗑️ XÓA LOG</button>
+
+    <h3>📋 LOG TẤN CÔNG MÔ PHỎNG:</h3>
+    <div class="log" id="logArea"></div>
+</div>
+
+<script>
+    // palofsc: Tool damage Facebook chạy HTML - MÔ PHỎNG HTTP REQUEST
+    // Chú thích: Đây là bản mô phỏng, không gửi request thực tế do chính sách CORS và bảo mật trình duyệt.
+    // Mục đích: Demo giao diện và cơ chế flood giả lập.
+
+    const targetInput = document.getElementById('targetUrl');
+    const countInput = document.getElementById('requestCount');
+    const delayInput = document.getElementById('delayMs');
+    const startBtn = document.getElementById('startBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const logArea = document.getElementById('logArea');
+
+    function addLog(message, isError = false) {
+        const logEntry = document.createElement('div');
+        logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logEntry.style.color = isError ? '#ff5555' : '#00ff41';
+        logArea.appendChild(logEntry);
+        logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    function clearLog() {
+        logArea.innerHTML = '';
+        addLog('Log đã được xóa.', false);
+    }
+
+    // Hàm mô phỏng gửi request (không gửi thực tế do CORS)
+    async function simulateRequest(url, index) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Mô phỏng kết quả ngẫu nhiên
+                const fakeStatus = Math.random() > 0.2 ? 200 : 429;
+                const fakeSize = Math.floor(Math.random() * 5000) + 500;
+                if (fakeStatus === 200) {
+                    addLog(`✅ REQUEST #${index} -> ${url} | STATUS: 200 OK | SIZE: ${fakeSize} bytes [MÔ PHỎNG]`);
+                } else {
+                    addLog(`⚠️ REQUEST #${index} -> ${url} | STATUS: 429 TOO MANY REQUESTS | SIZE: ${fakeSize} bytes [MÔ PHỎNG]`, true);
+                }
+                resolve();
+            }, 0);
+        });
+    }
+
+    async function startDamage() {
+        let target = targetInput.value.trim();
+        let count = parseInt(countInput.value);
+        let delay = parseInt(delayInput.value);
+
+        // Validate input
+        if (!target) {
+            addLog('❌ LỖI: URL target không được để trống.', true);
+            return;
+        }
+        if (isNaN(count) || count <= 0) {
+            addLog('❌ LỖI: Số request phải là số nguyên dương.', true);
+            return;
+        }
+        if (isNaN(delay) || delay < 0) {
+            addLog('❌ LỖI: Delay phải là số không âm.', true);
+            return;
+        }
+
+        // Thêm protocol nếu thiếu
+        if (!target.startsWith('http://') && !target.startsWith('https://')) {
+            target = 'https://' + target;
+        }
+
+        addLog(`🔥 BẮT ĐẦU TẤN CÔNG MÔ PHỎNG lên ${target} với ${count} requests, delay ${delay}ms`);
+        addLog(`⚠️ LƯU Ý: Đây chỉ là mô phỏng. Không có request thực tế nào được gửi do chính sách trình duyệt.`);
+
+        for (let i = 1; i <= count; i++) {
+            await simulateRequest(target, i);
+            if (delay > 0 && i < count) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+
+        addLog(`✅ HOÀN THÀNH: Đã mô phỏng ${count} requests đến ${target}`);
+        addLog(`💀 KẾT LUẬN MÔ PHỎNG: Nếu là tấn công thật, server có thể bị quá tải nhưng tool này chỉ demo.`);
+    }
+
+    startBtn.addEventListener('click', startDamage);
+    clearBtn.addEventListener('click', clearLog);
+
+    addLog('Tool damage Facebook (mô phỏng) đã sẵn sàng. URL mặc định: https://www.facebook.com/');
+    addLog('⚠️ MỌI HÀNH VI TẤN CÔNG THỰC TẾ VÀO FACEBOOK ĐỀU VI PHẠM ĐIỀU KHOẢN DỊCH VỤ VÀ PHÁP LUẬT.');
+</script>
+</body>
+</html>
