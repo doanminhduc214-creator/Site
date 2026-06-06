@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Free Fire Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Impact', system-ui, -apple-system, 'Roboto', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Panel chính */
+        .panel {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(18, 25, 45, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            border: 1px solid rgba(255, 70, 0, 0.5);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* Header giống Free Fire */
+        .header {
+            background: linear-gradient(135deg, #ff6600, #ff3300);
+            padding: 20px 24px;
+            text-align: center;
+            border-bottom: 3px solid #ffcc00;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #a12200;
+            font-weight: 800;
+            word-break: keep-all;
+        }
+
+        .badge {
+            background: #000000aa;
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #ffcc44;
+            margin-top: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Nội dung */
+        .content {
+            padding: 24px 20px 30px;
+        }
+
+        /* ô tìm kiếm / ID */
+        .input-group {
+            margin-bottom: 24px;
+            background: #0f1422;
+            border-radius: 60px;
+            display: flex;
+            border: 1px solid #ff6600;
+            overflow: hidden;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+        }
+
+        .input-group input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1rem;
+            color: white;
+            font-weight: 500;
+            outline: none;
+        }
+
+        .input-group input::placeholder {
+            color: #9aa3c2;
+            font-weight: 400;
+        }
+
+        .input-group button {
+            background: #ff6600;
+            border: none;
+            width: 70px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.1s linear;
+        }
+
+        .input-group button:active {
+            background: #cc4400;
+            transform: scale(0.96);
+        }
+
+        /* Các nút chức năng dạng lưới */
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 28px 0;
+        }
+
+        .action-card {
+            background: #131a2c;
+            border-radius: 28px;
+            padding: 16px 8px;
+            text-align: center;
+            transition: 0.05s linear;
+            border: 1px solid #2a3452;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #070b12;
+        }
+
+        .action-card:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #070b12;
+        }
+
+        .action-icon {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .action-title {
+            font-weight: bold;
+            color: #ffaa55;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .action-desc {
+            font-size: 0.7rem;
+            color: #98a1c1;
+            margin-top: 4px;
+        }
+
+        /* thanh thông báo / log */
+        .log-area {
+            background: #070b14cc;
+            border-radius: 24px;
+            padding: 14px;
+            margin-top: 20px;
+            border-left: 5px solid #ff6600;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #ddd;
+            word-break: break-word;
+            min-height: 90px;
+        }
+
+        .log-title {
+            font-size: 0.7rem;
+            color: #ff884d;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        /* nút VIP đặc biệt */
+        .vip-section {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .vip-btn {
+            flex: 1;
+            background: linear-gradient(90deg, #9b2eff, #5f00ba);
+            border: none;
+            padding: 12px;
+            border-radius: 60px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.05s linear;
+            box-shadow: 0 5px 0 #2e0066;
+        }
+
+        .vip-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #2e0066;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.65rem;
+            padding: 14px;
+            background: #05080f;
+            color: #ff9955;
+            border-top: 1px solid #ff660055;
+        }
+    </style>
+</head>
+<body>
+<div class="panel">
+    <div class="header">
+        <h1>🔥 FREE FIRE ELITE 🔥</h1>
+        <div class="badge">⚡ ADMIN PANEL v3.2 ⚡</div>
+    </div>
+    <div class="content">
+        <div class="input-group">
+            <input type="text" id="uidInput" placeholder="NHẬP ID NHÂN VẬT / UID..." autocomplete="off">
+            <button id="searchBtn">🔍</button>
+        </div>
+
+        <div class="grid-buttons">
+            <div class="action-card" data-action="diamond">
+                <span class="action-icon">💎</span>
+                <div class="action-title">+9999 KIM CƯƠNG</div>
+                <div class="action-desc">MIỄN PHÍ KHÔNG GIỚI HẠN</div>
+            </div>
+            <div class="action-card" data-action="gold">
+                <span class="action-icon">🪙</span>
+                <div class="action-title">+99,999,999 VÀNG</div>
+                <div class="action-desc">TÀI NGUYÊN VÔ TẬN</div>
+            </div>
+            <div class="action-card" data-action="weapon">
+                <span class="action-icon">🔫</span>
+                <div class="action-title">MỞ KHÓA VŨ KHÍ H HUYỀN THOẠI</div>
+                <div class="action-desc">ALL SKIN + CẤP ĐỘ TỐI ĐA</div>
+            </div>
+            <div class="action-card" data-action="character">
+                <span class="action-icon">🧑‍🎤</span>
+                <div class="action-title">NHÂN VẬT ĐẶC BIỆT</div>
+                <div class="action-desc">CHRONO + K SHADOW + ALENKO</div>
+            </div>
+            <div class="action-card" data-action="rank">
+                <span class="action-icon">🏆</span>
+                <div class="action-title">HEROIC RANK + BẢNG XẾP HẠNG</div>
+                <div class="action-desc">TOP 1 TOÀN CẦU</div>
+            </div>
+            <div class="action-card" data-action="aimbot">
+                <span class="action-icon">🎯</span>
+                <div class="action-title">AIMBOT / WALLHACK</div>
+                <div class="action-desc">TỰ ĐỘNG NHẮM + XUYÊN TƯỜNG</div>
+            </div>
+        </div>
+
+        <div class="vip-section">
+            <button class="vip-btn" id="unlockAllBtn">✨ MỞ KHÓA TOÀN BỘ ✨</button>
+            <button class="vip-btn" id="resetBtn">🔄 RESET TÀI KHOẢN 🔄</button>
+        </div>
+
+        <div class="log-area">
+            <div class="log-title">📟 [ HỆ THỐNG KÍCH HOẠT ]</div>
+            <div id="logMessage">▶ Sẵn sàng. Nhập UID và chọn tính năng.</div>
+        </div>
+    </div>
+    <footer>
+        ⚠️ MOD PANEL NỘI BỘ | CHỈ DÀNH CHO MỤC ĐÍCH DEMO
+    </footer>
+</div>
+
+<script>
+    // Code giả lập panel Free Fire - tương tác frontend thuần (demo hiệu ứng)
+    // Hoàn toàn không can thiệp game thật, chỉ mô phỏng giao diện.
+    (function() {
+        // Lấy elements
+        const uidInput = document.getElementById('uidInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const logDiv = document.getElementById('logMessage');
+        const actionCards = document.querySelectorAll('.action-card');
+        const unlockAllBtn = document.getElementById('unlockAllBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let currentUID = "";
+
+        // Ghi log ra panel
+        function setLog(msg, isError = false) {
+            if(isError) {
+                logDiv.innerHTML = `⚠️ ${msg}`;
+            } else {
+                logDiv.innerHTML = `✅ ${msg}`;
+            }
+            // tự động reset màu sau 2 giây (nhưng không ảnh hưởng tính năng)
+            setTimeout(() => {
+                if(logDiv.innerHTML === `✅ ${msg}` || logDiv.innerHTML === `⚠️ ${msg}`) {
+                    // giữ lại thông báo nhưng thay đổi nhẹ? không quan trọng
+                }
+            }, 2500);
+        }
+
+        // Hàm fake gửi yêu cầu tới server (mô phỏng)
+        function sendCommand(actionType, uid) {
+            if(!uid || uid.trim() === "") {
+                setLog("CHƯA NHẬP UID ! Hãy nhập ID Free Fire", true);
+                return false;
+            }
+            // Danh sách các hành động fake chi tiết
+            const actionsFake = {
+                diamond: `Đã gửi +9999 KIM CƯƠNG vào tài khoản ${uid}. Giao dịch #FF${Math.floor(Math.random()*100000)}`,
+                gold: `Đã cộng 99,999,999 VÀNG vào kho đồ. ID: ${uid}`,
+                weapon: `Mở khóa toàn bộ vũ khí huyền thoại (M1887 - DINO - KATANA) cho UID: ${uid}`,
+                character: `MỞ KHÓA Chrono, Alok, Skyler, K (cấp độ tối đa) - UID ${uid}`,
+                rank: `Xếp hạng HEROGIC 10000 SAO + Biểu tượng toàn cầu cho ${uid}`,
+                aimbot: `Kích hoạt AIMBOT + WALLHACK (ESP) thành công trên thiết bị của UID ${uid}`
+            };
+            let msg = actionsFake[actionType] || `Thực thi lệnh ${actionType} trên UID: ${uid}`;
+            setLog(msg);
+            return true;
+        }
+
+        // Hàm mở khóa toàn bộ (gọi lần lượt các tính năng)
+        function unlockAllFeatures() {
+            if(!currentUID) {
+                setLog("Chưa có UID! Hãy nhập ID và ấn 🔍 trước", true);
+                return;
+            }
+            setLog(`🔥 BẮT ĐẦU UNLOCK TOÀN BỘ TÍNH NĂNG CHO UID: ${currentUID} 🔥`);
+            setTimeout(() => sendCommand('diamond', currentUID), 100);
+            setTimeout(() => sendCommand('gold', currentUID), 300);
+            setTimeout(() => sendCommand('weapon', currentUID), 500);
+            setTimeout(() => sendCommand('character', currentUID), 700);
+            setTimeout(() => sendCommand('rank', currentUID), 900);
+            setTimeout(() => sendCommand('aimbot', currentUID), 1100);
+            setTimeout(() => setLog(`HOÀN TẤT UNLOCK => Tài khoản ${currentUID} đã được NÂNG CẤP VÔ HẠN`), 1500);
+        }
+
+        function resetAccount() {
+            if(!currentUID) {
+                setLog("Không có UID để reset. Nhập ID trước!", true);
+                return;
+            }
+            setLog(`⚠️⚠️⚠️ RESET TOÀN BỘ DỮ LIỆU account ${currentUID} về trạng thái mới (cấp 1, 0 kim cương) ⚠️⚠️⚠️`, false);
+            // fake reset
+            setTimeout(() => {
+                setLog(`Đã RESET thành công UID: ${currentUID}. Mọi vật phẩm đã được xóa sạch.`);
+            }, 800);
+        }
+
+        // Xử lý tìm kiếm / xác nhận UID
+        function onSearch() {
+            let rawUid = uidInput.value.trim();
+            if(rawUid === "") {
+                setLog("LỖI: Vui lòng nhập UID (dạng số hoặc tên)", true);
+                return;
+            }
+            // Kiểm tra định dạng giả lập (chỉ cần không rỗng)
+            if(!/^[a-zA-Z0-9_-]{4,20}$/.test(rawUid) && isNaN(parseInt(rawUid))) {
+                // vẫn chấp nhận nhưng cảnh báo nhẹ, vì nhiều id ff có cả chữ
+                setLog(`UID "${rawUid}" không chuẩn số, nhưng hệ thống vẫn chấp nhận`, false);
+            } else {
+                setLog(`Đã tìm thấy tài khoản Free Fire: ${rawUid} (cấp độ 87)`);
+            }
+            currentUID = rawUid;
+            // thêm hiệu ứng focus
+            uidInput.style.borderColor = "#ffcc00";
+            setTimeout(() => uidInput.style.borderColor = "", 600);
+        }
+
+        // Gắn sự kiện cho từng action card
+        actionCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const action = card.getAttribute('data-action');
+                if(!action) return;
+                if(!currentUID) {
+                    setLog("HÃY NHẬP UID VÀ NHẤN TÌM KIẾM TRƯỚC KHI DÙNG TÍNH NĂNG", true);
+                    return;
+                }
+                sendCommand(action, currentUID);
+            });
+        });
+
+        // Nút tìm kiếm
+        searchBtn.addEventListener('click', onSearch);
+        uidInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') onSearch();
+        });
+
+        // Nút mở khóa toàn bộ và reset
+        unlockAllBtn.addEventListener('click', unlockAllFeatures);
+        resetBtn.addEventListener('click', resetAccount);
+
+        // Tạo thêm thông báo khởi tạo UI
+        console.log("FF Panel Ready - Chế độ mô phỏng giao diện");
+        // gán currentUID mặc định nếu muốn test (không)
+    })();
+</script>
+</body>
+</html>
